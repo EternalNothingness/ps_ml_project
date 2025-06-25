@@ -155,18 +155,19 @@ transactions_dataset = pd.read_csv('transactions.csv')
 # compute correlations with target
 correlations = transactions_dataset.corr()['Class'].drop('Class').abs().sort_values(ascending=False)
 
-feature_range = range(1, 20, 1)
-test_sizes = np.arange(0.3, 0.5, 0.1)
+feature_range = range(3, 27, 1)
+test_sizes = np.arange(0.4, 0.5, 0.1)
 best_config = {"f1": 0, "features": 0, "test_size": 0, "threshold": 0}
+best_roc_auc = {"score": 0, "features": 0, "test_size": 0}
 
-for n_features in feature_range:
-    for t_size in test_sizes:
+for t_size in test_sizes:
+    for n_features in feature_range:
         print(f"\n=== Top {n_features} Features | Test Size: {t_size:.1f} ===")
 
         X_train_scaled, X_test_scaled, Y_train, Y_test, scaler, features = load_split_data(
             transactions_dataset, 
             correlations,
-            0,    
+            1,    
             n_features,
             t_size)
 
@@ -174,8 +175,9 @@ for n_features in feature_range:
         model.fit(X_train_scaled, Y_train)
         y_pred = model.predict(X_test_scaled)
         y_scores = model.decision_function(X_test_scaled)
+        roc_auc = roc_auc_score(Y_test, y_scores)
 
-        print("ROC-AUC Score:", roc_auc_score(Y_test, y_scores))
+        print("ROC-AUC Score:", roc_auc)
         
         report = classification_report(Y_test, y_pred, output_dict=True)
         class_1_metrics = report['1']
@@ -200,10 +202,22 @@ for n_features in feature_range:
                 "test_size": t_size,
                 "threshold": best_threshold
             })
+
+        if roc_auc > best_roc_auc["score"]:
+            best_roc_auc.update({
+                "score": roc_auc,
+                "features": n_features,
+                "test_size": t_size
+            })
         
 print("\n=== Best Configuration ===")
 print(f"Top {best_config['features']} features | Test size: {best_config['test_size']}")
 print(f"Best F1: {best_config['f1']:.2f} at threshold: {best_config['threshold']:.4f}")
+print(f"Best ROC-ACU: {roc_auc_score(Y_test, y_scores):.3f}")
+
+print("\n=== Best ROC-AUC Configuration ===")
+print(f"Top {best_roc_auc['features']} features | Test size: {best_roc_auc['test_size']}")
+print(f"Best ROC-AUC Score: {best_roc_auc['score']:.4f}")
 
 joblib.dump(model, "model.joblib")
 joblib.dump(scaler, "scaler.joblib")
