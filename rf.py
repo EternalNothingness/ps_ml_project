@@ -21,7 +21,7 @@ def load_and_split():
 def train(X_train, y_train, clf_params):
     # clf = RandomForestClassifier(random_state=0, verbose=1)
     pca = PCA(random_state=0)
-    rf = RandomForestClassifier(random_state=0)
+    rf = RandomForestClassifier(random_state=0, n_jobs=-1)
     pipeline = Pipeline(steps=[(PIPE_PCA, pca), (PIPE_RF, rf)])
     search = RandomizedSearchCV(estimator=pipeline, param_distributions=clf_params, scoring='roc_auc', refit=True, random_state=0, n_jobs=-1, verbose=2)
     search.fit(X_train, y_train)
