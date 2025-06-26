@@ -1,0 +1,161 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%2345678901234567890123456789012345678901234567890123456789012345678901234567890
+%        1         2         3         4         5         6         7         8
+
+\documentclass[a4, 10 pt, conference]{ieeeconf}  % Comment this line out if you need a4paper
+
+%\documentclass[a4paper, 10pt, conference]{ieeeconf}      % Use this line for a4 paper
+
+\IEEEoverridecommandlockouts                              % This command is only needed if 
+                                                          % you want to use the \thanks command
+
+\overrideIEEEmargins                                      % Needed to meet printer requirements.
+
+% See the \addtolength command later in the file to balance the column lengths
+% on the last page of the document
+
+% The following packages can be found on http:\\www.ctan.org
+%\usepackage{graphics} % for pdf, bitmapped graphics files
+%\usepackage{epsfig} % for postscript graphics files
+%\usepackage{mathptmx} % assumes new font selection scheme installed
+%\usepackage{times} % assumes new font selection scheme installed
+%\usepackage{amsmath} % assumes amsmath package installed
+%\usepackage{amssymb}  % assumes amsmath package installed
+\usepackage{multicol}
+\usepackage{tcolorbox}
+\usepackage{cuted,tcolorbox,lipsum}
+\usepackage{xcolor}
+
+\title{\LARGE \bf
+Introduction to Machine Learning (SS 2024)\\ Programming Project
+\vspace{-3em}
+}
+
+
+%\author{Someone Anyone$^{1}$ and Xiang Zhang$^{2}$% <-this % stops a space
+%}
+
+
+\begin{document}
+
+
+\maketitle
+\vspace{-3em}
+\thispagestyle{empty}
+\pagestyle{empty}
+
+\begin{strip}
+\begin{tcolorbox}[
+size=tight,
+colback=white,
+boxrule=0.2mm,
+left=3mm,right=3mm, top=3mm, bottom=1mm
+]
+{\begin{multicols}{3}% replace 3 with 2 for 2 authors.
+
+\textbf{Author 1}       \\
+Last name:              \\  % Enter first name
+First name:             \\  % Enter first name
+Matrikel Nr.:               \\  % Enter Matrikel number
+
+\columnbreak
+
+\textbf{Author 2}       \\
+Last name:              \\  % Enter first name
+First name:             \\  % Enter first name
+Matrikel Nr.:               \\  % Enter Matrikel number
+
+\columnbreak
+
+% only four three person team
+% \textbf{Author 3}       \\
+% Last name:              \\  % Enter first name
+% First name:             \\  % Enter first name
+% Matrikel Nr.:               \\  % Enter Matrikel number
+
+\end{multicols}}
+\end{tcolorbox}
+\end{strip}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+{\color{blue}
+  \noindent This template outlines the sections that your report must 
+  contain. Inside each section, we provide pointers to what you should
+  write about in that section (in blue text).  \linebreak
+
+\noindent \textbf{Please remove all the text in blue in your report!
+  Your report should be 2 pages for regular teams (excluding references!)
+  and 3 pages for the three person team.}  }
+
+\section{Introduction}
+\label{sec:intro}
+
+{\color{blue}
+
+\begin{itemize}
+	\item What is the nature of your task (regression/classification)? Is it about classifying types of birds, or deciding the number of cookies an employee receives?
+	\item Describe the dataset (number of features, number of instances, types of features, missing data, data imbalances, or any other relevant information).
+\end{itemize}
+}
+
+
+\section{Implementation / ML Process}
+\label{sec:methods}
+
+{\color{blue}
+
+\begin{itemize}
+	\item Did you need to pre-process the dataset (e.g. augmenting data points, extracting features, reducing the dimensionality, etc.)? If so, describe how you did this.
+	\item Specify the method (e.g. linear regression, or neural network, etc.). You do not have to describe the algorithm in detail, but rather the algorithm family and the properties of the algorithm within that family, e.g. which distance functions for a decision tree, what architecture (layers and activations) for a neural network, etc. 
+	\item State (in 2-5 lines) what makes the algorithm you chose suitable for this problem. What are the reasons for choosing your ML method over others?
+    \item If you used a method that was not covered in the VO, describe how it is different from the closest method described in the VO.
+	\item How did you choose hyperparameters (other design choices) and what are the values of the hyperparameters you chose for your final model? How did you make sure that the choice of hyperparameters works well?
+\end{itemize}
+}
+
+\section{Results}
+\label{sec:results}
+
+{\color{blue}
+
+\begin{itemize}
+	\item Describe the performance of your model (in terms of the metrics for your dataset) on the training and validation sets with the help of plots or/and tables.
+	\item You must provide at least two separate visualizations
+          (plot or tables) of different things, i.e. don’t use a table
+          and a bar plot of the same metrics. At least three
+           visualizations are required for the 3 person team.
+\end{itemize}
+}
+
+\section{Discussion}
+\label{sec:discuss}
+
+{\color{blue}
+\begin{itemize}
+	\item Analyze the results presented in the report (comment on what contributed to the good or bad results). If your method does not work well, try to analyze why this is the case.
+	\item Describe very briefly what you tried but did not keep for your final implementation (e.g. things you tried but that did not work, discarded ideas, etc.).
+	\item How could you try to improve your results? What else would you want to try?
+
+\end{itemize}
+}
+
+\section{Conclusion}
+\label{sec:con}
+
+{\color{blue}
+
+  \begin{itemize}
+  \item Finally, describe the test-set performance you achieved. Do not
+    optimize your method based on the test set performance!
+  \item Write a 5-10 line paragraph describing the main takeaway of your project.
+  \end{itemize}
+
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\end{document}
