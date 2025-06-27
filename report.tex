@@ -27,13 +27,9 @@
 \usepackage{xcolor}
 
 \title{\LARGE \bf
-Introduction to Machine Learning (SS 2024)\\ Programming Project
+Introduction to Machine Learning (SS 2025)\\ Programming Project
 \vspace{-3em}
 }
-
-
-%\author{Someone Anyone$^{1}$ and Xiang Zhang$^{2}$% <-this % stops a space
-%}
 
 
 \begin{document}
@@ -51,19 +47,19 @@ colback=white,
 boxrule=0.2mm,
 left=3mm,right=3mm, top=3mm, bottom=1mm
 ]
-{\begin{multicols}{3}% replace 3 with 2 for 2 authors.
+{\begin{multicols}{2}% replace 3 with 2 for 2 authors.
 
-\textbf{Author 1}       \\
-Last name:              \\  % Enter first name
-First name:             \\  % Enter first name
-Matrikel Nr.:               \\  % Enter Matrikel number
+\textbf{Author 1}\\
+Last name: Gajdos\\
+First name: Dominik\\
+Matrikel Nr.:\\  % Enter Matrikel number
 
 \columnbreak
 
-\textbf{Author 2}       \\
-Last name:              \\  % Enter first name
-First name:             \\  % Enter first name
-Matrikel Nr.:               \\  % Enter Matrikel number
+\textbf{Author 2}\\
+Last name: Wintner\\
+First name: Patrick\\
+Matrikel Nr.: 12143491\\
 
 \columnbreak
 
@@ -100,7 +96,7 @@ Matrikel Nr.:               \\  % Enter Matrikel number
 \end{itemize}
 }
 
-
+This report is covers the detection of fraudulent transactions using different binary classifiers. The dataset has 30 features and contains more than 227,800 entries belonging either to class 0 (not fraudulent) or 1 (fraudulent). The dataset is extremely imbalanced; roughly 99.8\% of all transactions are not fraudulent. All features are numerical.
 \section{Implementation / ML Process}
 \label{sec:methods}
 
@@ -114,6 +110,14 @@ Matrikel Nr.:               \\  % Enter Matrikel number
 	\item How did you choose hyperparameters (other design choices) and what are the values of the hyperparameters you chose for your final model? How did you make sure that the choice of hyperparameters works well?
 \end{itemize}
 }
+We decided to implement logistic regression and a random forest for this task. Each model has been implemented by one author, which has resulted in slightly different approaches for each classifier.
+
+\subsection{Data Logistic Regression}
+
+\subsection{Random Forest}
+The implementation uses principal component analysis provided by scikit-learn to reduce the dimension of the input data and the implementation of the random forest from scikit-learn for classification.
+\subsubsection{Data-Preprocessing}
+The data is preprocessed using the PCA implementation provided by scikit-learn.
 
 \section{Results}
 \label{sec:results}
