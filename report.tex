@@ -115,9 +115,11 @@ We decided to implement logistic regression and a random forest for this task. E
 \subsection{Data Logistic Regression}
 
 \subsection{Random Forest}
-The implementation uses principal component analysis provided by scikit-learn to reduce the dimension of the input data and the implementation of the random forest from scikit-learn for classification.
+The implementations of principal component analysis and random forests of scikit-learn are used.
 \subsubsection{Data-Preprocessing}
-The data is preprocessed using the PCA implementation provided by scikit-learn.
+The data is split into a training and test set, which contain 75\% and 25\% of all samples respectively. The dimensionality of the input data is reduced by using principal component analysis. The implementation of scikit-learn uses singular value decomposition without scaling the input data beforehand.
+\subsubsection{Classifier Architecture}
+\subsubsection{Hyperparameters}
 
 \section{Results}
 \label{sec:results}
