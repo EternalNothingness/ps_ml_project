@@ -25,6 +25,7 @@
 \usepackage{tcolorbox}
 \usepackage{cuted,tcolorbox,lipsum}
 \usepackage{xcolor}
+\usepackage{hyperref}
 
 \title{\LARGE \bf
 Introduction to Machine Learning (SS 2025)\\ Programming Project
@@ -110,17 +111,35 @@ This report is covers the detection of fraudulent transactions using different b
 	\item How did you choose hyperparameters (other design choices) and what are the values of the hyperparameters you chose for your final model? How did you make sure that the choice of hyperparameters works well?
 \end{itemize}
 }
-We decided to implement logistic regression and a random forest for this task. Each model has been implemented by one author, which has resulted in slightly different approaches for each classifier.
+We decided to implement logistic regression and a random forest for this task. Both methods are binary classifiers and thus appropriate for this problem. Furthermore, random forests are recommended by Baeldung for fraud detection\cite{baeldung}. Each model has been implemented by one author, which has resulted in slightly different approaches for each classifier.
 
 \subsection{Data Logistic Regression}
 
 \subsection{Random Forest}
 The implementations of principal component analysis and random forests of scikit-learn are used.
 \subsubsection{Data-Preprocessing}
-The data is split into a training and test set, which contain 75\% and 25\% of all samples respectively. The dimensionality of the input data is reduced by using principal component analysis. The implementation of scikit-learn uses singular value decomposition without scaling the input data beforehand.
-\subsubsection{Classifier Architecture}
+\label{subsubsection:data-processing}
+The data is split into a training and test set, which contain 75\% and 25\% of all samples respectively. The dimensionality of the input data is reduced by using principal component analysis. The implementation of scikit-learn uses singular value decomposition without scaling the input data beforehand \cite{sl.pca}. The number of dimensions kept is determined via randomized search cross validation (see \ref{subsubsection:hyperparameters}); the other parameters are kept to their default values.
+\subsubsection{Classifier Properties}
+\label{subsubsection:classifier-properties}
+Each tree in the ensemble is built from a sample drawn with replacement and using the best split strategy. The final prediction is the average of the probabilistic predictions of the individual trees (instead of using a voting mechanism). The most important hyperparameters according to the scikit-learn documentation are the number of trees in a forest and the number of features used to determine the best split \cite{sl.rf}. Those are determined via randomized search cross validation (see \ref{subsubsection:hyperparameters}), as is the criterion used to measure the impurity of a split. The other parameters are kept to their default values, therefore there is no maximal tree depth, no maximal number of leaf nodes and classes are not weighted.
 \subsubsection{Hyperparameters}
+\label{subsubsection:hyperparameters}
+The most important hyperparameters (for search ranges and final choices see table \ref{tab:param.rf}) are determined by using the implementation of randomized search cross validation provided by scikit-learn. The randomized search cross validation is given a pipeline consisting of a PCA-Object and a random forest classifier. Five-fold cross-validation is used as cross-validation scheme and the ROC AUC score is used for performance measurement. Ten different parameter settings are sampled. The pipeline is refitted with the best parameters found.
 
+K-fold cross validation works by splitting the training set into k smaller sets, training the model on k-1 sets and using the last set for validation. This is done k times so that each set is used once for validation. The performance is then computed by taking the average. \cite{sl.cv}
+
+The implementation of randomized Cross validation search by scikit-learn optimizes parameters by sampling a number of parameter settings of a given parameter space, performing cross validation for the sampled setting, and keeping the parameters that resulted in the best score. Using a pipeline allows several steps (e.g. data-preprocessing followed by a classifier) to be cross-validated together. \cite{sl.rcv}
+
+\begin{table}[htbp]
+	\begin{tabular}{c|c|c|c|c}
+		& $n\_components$ & $n\_estimators$ & $max\_features$ & $criterion$\\
+		\hline range & $\{1, 7, 13,\dots , 25\}$ & $\{10, 11,\dots, 100\}$ & $[0,1]$ & $\{gini, entropy, log\_loss\}$\\
+		\hline choice & 19 & 47 & 0.225 & log\_loss
+	\end{tabular}
+	\caption{Hyperparameter selection random forest}
+	\label{tab:param.rf}
+\end{table}
 \section{Results}
 \label{sec:results}
 
@@ -160,6 +179,13 @@ The data is split into a training and test set, which contain 75\% and 25\% of a
 
 }
 
+\begin{thebibliography}{xxxx}
+	\bibitem{baeldung} \url{https://www.baeldung.com/cs/random-forest-vs-extremely-randomized-trees} [online; last access on 02.07.2025]
+	\bibitem{sl.pca} \url{https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html} [online; last access on 02.07.2025]
+	\bibitem{sl.rf} \url{https://scikit-learn.org/stable/modules/ensemble.html#random-forests-and-other-randomized-tree-ensembles} [online; last access on 02.07.2025]
+	\bibitem{sl.cv} \url{https://scikit-learn.org/stable/modules/cross_validation.html#cross-validation} [online; last access on 03.07.2025]
+	\bibitem{sl.rcv} \url{https://scikit-learn.org/stable/modules/grid_search.html#randomized-parameter-search}
+\end{thebibliography}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
