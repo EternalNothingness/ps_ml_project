@@ -140,6 +140,7 @@ The implementation of randomized Cross validation search by scikit-learn optimiz
 	\caption{Hyperparameter selection random forest}
 	\label{tab:param.rf}
 \end{table}
+
 \section{Results}
 \label{sec:results}
 
@@ -154,6 +155,18 @@ The implementation of randomized Cross validation search by scikit-learn optimiz
 \end{itemize}
 }
 
+Both classifiers achieve acceptable results on the validation set, which can be seen in table \ref{tab:results}.
+
+\begin{table}[htbp]
+	\begin{tabular}{c|c|c|c|c}
+		classifier & ROC AUC Score & Accuracy score & Precision score & Recall score\\
+		\hline logistic regression & & & &\\
+		\hline random forest & 91.6\% & 99.97\% & 97.4\% & 83.1\%
+	\end{tabular}
+	\caption{Hyperparameter selection random forest}
+	\label{tab:results}
+\end{table}
+
 \section{Discussion}
 \label{sec:discuss}
 
@@ -165,6 +178,8 @@ The implementation of randomized Cross validation search by scikit-learn optimiz
 
 \end{itemize}
 }
+
+The randomized cross validation search slightly outperforms the results we have gotten by using just the default values. It hovever is computionally way more expensive.
 
 \section{Conclusion}
 \label{sec:con}
