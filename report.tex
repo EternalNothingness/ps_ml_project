@@ -163,7 +163,7 @@ Both classifiers achieve acceptable results on the validation set, which can be 
 		\hline logistic regression & & & &\\
 		\hline random forest & 91.6\% & 99.97\% & 97.4\% & 83.1\%
 	\end{tabular}
-	\caption{Hyperparameter selection random forest}
+	\caption{Validation scores random forest}
 	\label{tab:results}
 \end{table*}
 
@@ -184,7 +184,7 @@ The parameters determined by randomized cross-validation search lead to slightly
 
 The most obvious way to improve the results is to sample more parameter settings during randomized cross-validation search and by using tighter bounds for the spaces from wich the parameters are sampled. Another option to likely increase the performance is to set the parameter \emph{class\_weight} of the random forest classifier to 'balanced\_subsample' to take the imbalance of the dataset into account.
 
-Surprisingly, the effect on performance of using principal component analysis is negligible. This is probably because the parameter max\_features, which determines the number of features used for determining the best split has a somewhat similar effect (reducing the number of relevant features). Interestingly, the chosen values for n\_components and for max\_features result in a number of relevant features, which is near default value of max\_features=$\sqrt{n\_features}$ without PCA: $n\_components*max\_features = 19*0.225 \approx 4.3$ and $max\_features\_default=\sqrt{n\_features}=\sqrt{30}\approx 5.5$.
+Surprisingly, the effect on performance of using principal component analysis is negligible. This is probably because the parameter max\_features, which determines the number of features used for determining the best split has a somewhat similar effect (reducing the number of relevant features). Interestingly, the chosen values for n\_components and for max\_features result in a number of relevant features, which is near default value of max\_features=$\sqrt{n\_features}$ \cite{sl.rf} without PCA: $n\_components*max\_features = 19*0.225 \approx 4.3$ and $max\_features\_default=\sqrt{n\_features}=\sqrt{30}\approx 5.5$.
 
 \section{Conclusion}
 \label{sec:con}
@@ -198,6 +198,10 @@ Surprisingly, the effect on performance of using principal component analysis is
   \end{itemize}
 
 }
+
+The final test performance with the random forest classifier is $\approx$ 0.893 and thus slightly worse than the score on the validation set. Both classifiers seem to be valid choices for fraud detection with similar performance.
+
+It is somewhat surprising that randomized cross validation search with few trials can find parameters that results in slightly better performance than recommended default values. Considering the suggested improvements in \ref{sec:discuss}, the performance gap can likely be further increased. This suggests that randomized cross validation search is a good alternative to the computionally more expensive exhaustive grid search.
 
 \begin{thebibliography}{xxxx}
 	\bibitem{baeldung} \url{https://www.baeldung.com/cs/random-forest-vs-extremely-randomized-trees} [online; last access on 02.07.2025]
