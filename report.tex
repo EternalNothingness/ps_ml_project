@@ -131,7 +131,7 @@ K-fold cross validation works by splitting the training set into k smaller sets,
 
 The implementation of randomized Cross validation search by scikit-learn optimizes parameters by sampling a number of parameter settings of a given parameter space, performing cross validation for the sampled setting, and keeping the parameters that resulted in the best score. Using a pipeline allows several steps (e.g. data-preprocessing followed by a classifier) to be cross-validated together. \cite{sl.rcv}
 
-\begin{table}[htbp]
+\begin{table*}[hbt]
 	\begin{tabular}{c|c|c|c|c}
 		& $n\_components$ & $n\_estimators$ & $max\_features$ & $criterion$\\
 		\hline range & $\{1, 7, 13,\dots , 25\}$ & $\{10, 11,\dots, 100\}$ & $[0,1]$ & $\{gini, entropy, log\_loss\}$\\
@@ -139,7 +139,7 @@ The implementation of randomized Cross validation search by scikit-learn optimiz
 	\end{tabular}
 	\caption{Hyperparameter selection random forest}
 	\label{tab:param.rf}
-\end{table}
+\end{table*}
 
 \section{Results}
 \label{sec:results}
@@ -157,7 +157,7 @@ The implementation of randomized Cross validation search by scikit-learn optimiz
 
 Both classifiers achieve acceptable results on the validation set, which can be seen in table \ref{tab:results}.
 
-\begin{table}[htbp]
+\begin{table*}[hbt]
 	\begin{tabular}{c|c|c|c|c}
 		classifier & ROC AUC Score & Accuracy score & Precision score & Recall score\\
 		\hline logistic regression & & & &\\
@@ -165,7 +165,7 @@ Both classifiers achieve acceptable results on the validation set, which can be 
 	\end{tabular}
 	\caption{Hyperparameter selection random forest}
 	\label{tab:results}
-\end{table}
+\end{table*}
 
 \section{Discussion}
 \label{sec:discuss}
@@ -178,8 +178,13 @@ Both classifiers achieve acceptable results on the validation set, which can be 
 
 \end{itemize}
 }
+\subsection{Logistic Regression}
+\subsection{Random Forest}
+The parameters determined by randomized cross-validation search lead to slightly better results than the default parameters. It hovever is computionally way more expensive.
 
-The randomized cross validation search slightly outperforms the results we have gotten by using just the default values. It hovever is computionally way more expensive.
+The most obvious way to improve the results is to sample more parameter settings during randomized cross-validation search and by using tighter bounds for the spaces from wich the parameters are sampled. Another option to likely increase the performance is to set the parameter \emph{class\_weight} of the random forest classifier to 'balanced\_subsample' to take the imbalance of the dataset into account.
+
+Surprisingly, the effect on performance of using principal component analysis is negligible. This is probably because the parameter max\_features, which determines the number of features used for determining the best split has a somewhat similar effect (reducing the number of relevant features). Interestingly, the chosen values for n\_components and for max\_features result in a number of relevant features, which is near default value of max\_features=$\sqrt{n\_features}$ without PCA: $n\_components*max\_features = 19*0.225 \approx 4.3$ and $max\_features\_default=\sqrt{n\_features}=\sqrt{30}\approx 5.5$.
 
 \section{Conclusion}
 \label{sec:con}
