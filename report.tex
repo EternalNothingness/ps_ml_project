@@ -108,7 +108,7 @@ As the dataset is very imbalanced — where fraudulent transactions are much rar
 
 \subsubsection{Hyperparameters}
 \label{subsubsection:hyperparameters}
-This method focuses on three hyperparameters: test size, number of features and threshold. Firstly the test size is set between 20$%$ and 40$%$, as everything above and below did not yield useful results. Secondly, as stated in the Data Processing section, the number of features has been set between 3-27 features. Lastly, as tweaking the threshold has no effect on the ROC-AUC score, the refinement of it only leads to better F1 results. 
+This method focuses on three hyperparameters: test size, number of features and threshold. Firstly the test size is set between 20\% and 40\%, as everything above and below did not yield useful results. Secondly, as stated in the Data Processing section, the number of features has been set between 3-27 features. Lastly, as tweaking the threshold has no effect on the ROC-AUC score, the refinement of it only leads to better F1 results. 
 
 The ROC AUC score provides a single scalar value summarizing the models ability to distinguish between the two classes 
 across all possible classification thresholds. Unlike accuracy, it is not biased by class imbalance.
@@ -168,9 +168,6 @@ Classifier & ROC-AUC & Accuracy & Precision & Recall\\
 
 \section{Discussion}
 \label{sec:discuss}
-
-\subsection{Logistic Regression}
-\subsection{Random Forest}
 The parameters determined by randomized cross-validation search lead to slightly better results than the default parameters. It however is computionally way more expensive.
 
 The most obvious way to improve the results is to sample more parameter settings during randomized cross-validation search and by using tighter bounds for the spaces from wich the parameters are sampled. Another option to likely increase the performance is to set the parameter \emph{class\_weight} of the random forest classifier to 'balanced\_subsample' to take the imbalance of the dataset into account.
