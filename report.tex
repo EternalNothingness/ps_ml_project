@@ -26,6 +26,7 @@
 \usepackage{cuted,tcolorbox,lipsum}
 \usepackage{xcolor}
 \usepackage{hyperref}
+\usepackage{graphicx}
 
 \title{\LARGE \bf
 Introduction to Machine Learning (SS 2025)\\ Programming Project
@@ -53,7 +54,7 @@ left=3mm,right=3mm, top=3mm, bottom=1mm
 \textbf{Author 1}\\
 Last name: Gajdos\\
 First name: Dominik\\
-Matrikel Nr.:\\  % Enter Matrikel number
+Matrikel Nr.: 12311949\\  
 
 \columnbreak
 
@@ -62,58 +63,77 @@ Last name: Wintner\\
 First name: Patrick\\
 Matrikel Nr.: 12143491\\
 
-\columnbreak
-
-% only four three person team
-% \textbf{Author 3}       \\
-% Last name:              \\  % Enter first name
-% First name:             \\  % Enter first name
-% Matrikel Nr.:               \\  % Enter Matrikel number
-
 \end{multicols}}
 \end{tcolorbox}
 \end{strip}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-{\color{blue}
-  \noindent This template outlines the sections that your report must 
-  contain. Inside each section, we provide pointers to what you should
-  write about in that section (in blue text).  \linebreak
-
-\noindent \textbf{Please remove all the text in blue in your report!
-  Your report should be 2 pages for regular teams (excluding references!)
-  and 3 pages for the three person team.}  }
-
 \section{Introduction}
 \label{sec:intro}
-
-{\color{blue}
-
-\begin{itemize}
-	\item What is the nature of your task (regression/classification)? Is it about classifying types of birds, or deciding the number of cookies an employee receives?
-	\item Describe the dataset (number of features, number of instances, types of features, missing data, data imbalances, or any other relevant information).
-\end{itemize}
-}
-
 This report is covers the detection of fraudulent transactions using different binary classifiers. The dataset has 30 features and contains more than 227,800 entries belonging either to class 0 (not fraudulent) or 1 (fraudulent). The dataset is extremely imbalanced; roughly 99.8\% of all transactions are not fraudulent. All features are numerical.
+
 \section{Implementation / ML Process}
 \label{sec:methods}
-
-{\color{blue}
-
-\begin{itemize}
-	\item Did you need to pre-process the dataset (e.g. augmenting data points, extracting features, reducing the dimensionality, etc.)? If so, describe how you did this.
-	\item Specify the method (e.g. linear regression, or neural network, etc.). You do not have to describe the algorithm in detail, but rather the algorithm family and the properties of the algorithm within that family, e.g. which distance functions for a decision tree, what architecture (layers and activations) for a neural network, etc. 
-	\item State (in 2-5 lines) what makes the algorithm you chose suitable for this problem. What are the reasons for choosing your ML method over others?
-    \item If you used a method that was not covered in the VO, describe how it is different from the closest method described in the VO.
-	\item How did you choose hyperparameters (other design choices) and what are the values of the hyperparameters you chose for your final model? How did you make sure that the choice of hyperparameters works well?
-\end{itemize}
-}
 We decided to implement logistic regression and a random forest for this task. Both methods are binary classifiers and thus appropriate for this problem. Furthermore, random forests are recommended by Baeldung for fraud detection\cite{baeldung}. Each model has been implemented by one author, which has resulted in slightly different approaches for each classifier.
 
 \subsection{Data Logistic Regression}
+\subsubsection{Data-Preprocessing}
+\label{subsubsection:data-processing}
+First, we computed the absolute correlation of each feature with the target class (Class) and selected the top N features most correlated with the fraud label. 
+
+\begin{table}[h!]
+\begin{tabular}{l r}
+\hline
+\textbf{Correlation} & \textbf{Feature} \\
+\hline
+$>$ 0.3 		& F16, F13 \\
+0.3 - 0.2  	& F11, F9, F15 \\
+0.2 - 0.09 	& F2, F6, F10, F3, F17, F0, F8, F4, F1 \\
+$<$ 0.05 	& Remaining Features \\
+\hline
+\end{tabular}
+\centering
+\caption{Top and Bottom Correlated Features with 'Class'}
+\end{table}
+
+Features with high a correlelation have a strong linear relationship with the target, low correlation have a weak linear relationship. Choosing features with higher correlation often leads to better performance in models while low correlation may lead to unnecessary noise. In testing, it has been shown that the top 12 features deliver the best F1 score, while the top 26 features deliver the best ROC-AUC score.
+The features were then scaled using StandardScaler to normalize their distributions. No data augmentation or dimensionality reduction (e.g., PCA) was applied, as the dataset was already anonymized and numerical.
+
+\subsubsection{Classifier Properties}
+\label{subsubsection:classifier-properties}
+As fraud detection in this example is a binary classification problem (1 - fraud, 0 - not fraud), Logistic Regression has been used to estimate the probability of a transaction being classified as fraudalent. The model works by calculating a weighted linear combination of the input features and then applying the logistic (sigmoid) function to transform this linear output into a probability value, in this case 0 or 1.
+
+As the dataset is very imbalanced — where fraudulent transactions are much rarer compared to legitimate ones — the model was configured with the \texttt{class\_weight='balanced'} parameter. It adjusts the weight of each class inversely proportional to their frequency in the training data, decreasing bias towards the majority class.
+
+\subsubsection{Hyperparameters}
+\label{subsubsection:hyperparameters}
+This method focuses on three hyperparameters: test size, number of features and threshold. Firstly the test size is set between 20$%$ and 40$%$, as everything above and below did not yield useful results. Secondly, as stated in the Data Processing section, the number of features has been set between 3-27 features. Lastly, as tweaking the threshold has no effect on the ROC-AUC score, the refinement of it only leads to better F1 results. 
+
+The ROC AUC score provides a single scalar value summarizing the models ability to distinguish between the two classes 
+across all possible classification thresholds. Unlike accuracy, it is not biased by class imbalance.
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.5\textwidth]{roc_auc_curve.png}
+  \caption{ROC curve for the logistic regression model evaluated on the best set of hyperparameters. Number of Features: 26, Test Set Size: 0.2, Train ROC-AUC: 0.985, Test ROC-AUC: 0.982}
+  \label{fig:roc}
+\end{figure}
+
+\begin{table*}[hbt]
+	\centering
+	\begin{tabular}{c|c|c|c|c}
+		& $n\_components$ & $n\_estimators$ & $max\_features$ & $criterion$\\
+		\hline range & $\{1, 7, 13,\dots , 25\}$ & $\{10, 11,\dots, 100\}$ & $[0,1]$ & $\{gini, entropy, log\_loss\}$\\
+		\hline choice & 19 & 47 & 0.225 & log\_loss
+	\end{tabular}
+	\caption{Hyperparameter selection random forest}
+	\label{tab:param.rf}
+\end{table*}
+
+The curve shows the trade-off between the true positive rate and false positive rate across different thresholds. The area under the curve (AUC) is approximately 0.982, indicating strong performance in distinguishing fraudulent from legitimate transactions.
+
+
 
 \subsection{Random Forest}
 The implementations of principal component analysis and random forests of scikit-learn are used.
@@ -131,56 +151,27 @@ K-fold cross validation works by splitting the training set into k smaller sets,
 
 The implementation of randomized Cross validation search by scikit-learn optimizes parameters by sampling a number of parameter settings of a given parameter space, performing cross validation for the sampled setting, and keeping the parameters that resulted in the best score. Using a pipeline allows several steps (e.g. data-preprocessing followed by a classifier) to be cross-validated together. \cite{sl.rcv}
 
-\begin{table*}[hbt]
-	\begin{tabular}{c|c|c|c|c}
-		& $n\_components$ & $n\_estimators$ & $max\_features$ & $criterion$\\
-		\hline range & $\{1, 7, 13,\dots , 25\}$ & $\{10, 11,\dots, 100\}$ & $[0,1]$ & $\{gini, entropy, log\_loss\}$\\
-		\hline choice & 19 & 47 & 0.225 & log\_loss
-	\end{tabular}
-	\caption{Hyperparameter selection random forest}
-	\label{tab:param.rf}
-\end{table*}
-
 \section{Results}
 \label{sec:results}
-
-{\color{blue}
-
-\begin{itemize}
-	\item Describe the performance of your model (in terms of the metrics for your dataset) on the training and validation sets with the help of plots or/and tables.
-	\item You must provide at least two separate visualizations
-          (plot or tables) of different things, i.e. don’t use a table
-          and a bar plot of the same metrics. At least three
-           visualizations are required for the 3 person team.
-\end{itemize}
-}
-
 Both classifiers achieve acceptable results on the validation set, which can be seen in table \ref{tab:results}.
 
-\begin{table*}[hbt]
-	\begin{tabular}{c|c|c|c|c}
-		classifier & ROC AUC Score & Accuracy score & Precision score & Recall score\\
-		\hline logistic regression & & & &\\
-		\hline random forest & 91.6\% & 99.97\% & 97.4\% & 83.1\%
-	\end{tabular}
-	\caption{Validation scores random forest}
-	\label{tab:results}
-\end{table*}
+\begin{table}[h]
+\centering
+\begin{tabular}{c|c|c|c|c}
+Classifier & ROC-AUC & Accuracy & Precision & Recall\\
+\hline logistic regression & 98.5\% &  97.4\% & 86.8\% & 74.7\% \\
+\hline random forest & 91.6\% & 99.97\% & 97.4\% & 83.1\%
+\end{tabular}
+\caption{Validation scores}
+\label{tab:results}
+\end{table}
 
 \section{Discussion}
 \label{sec:discuss}
 
-{\color{blue}
-\begin{itemize}
-	\item Analyze the results presented in the report (comment on what contributed to the good or bad results). If your method does not work well, try to analyze why this is the case.
-	\item Describe very briefly what you tried but did not keep for your final implementation (e.g. things you tried but that did not work, discarded ideas, etc.).
-	\item How could you try to improve your results? What else would you want to try?
-
-\end{itemize}
-}
 \subsection{Logistic Regression}
 \subsection{Random Forest}
-The parameters determined by randomized cross-validation search lead to slightly better results than the default parameters. It hovever is computionally way more expensive.
+The parameters determined by randomized cross-validation search lead to slightly better results than the default parameters. It however is computionally way more expensive.
 
 The most obvious way to improve the results is to sample more parameter settings during randomized cross-validation search and by using tighter bounds for the spaces from wich the parameters are sampled. Another option to likely increase the performance is to set the parameter \emph{class\_weight} of the random forest classifier to 'balanced\_subsample' to take the imbalance of the dataset into account.
 
@@ -188,17 +179,6 @@ Surprisingly, the effect on performance of using principal component analysis is
 
 \section{Conclusion}
 \label{sec:con}
-
-{\color{blue}
-
-  \begin{itemize}
-  \item Finally, describe the test-set performance you achieved. Do not
-    optimize your method based on the test set performance!
-  \item Write a 5-10 line paragraph describing the main takeaway of your project.
-  \end{itemize}
-
-}
-
 The final test performance with the random forest classifier is $\approx$ 0.893 and thus slightly worse than the score on the validation set. Both classifiers seem to be valid choices for fraud detection with similar performance.
 
 It is somewhat surprising that randomized cross validation search with few trials can find parameters that results in slightly better performance than recommended default values. Considering the suggested improvements in \ref{sec:discuss}, the performance gap can likely be further increased. This suggests that randomized cross validation search is a good alternative to the computionally more expensive exhaustive grid search.
@@ -211,7 +191,5 @@ It is somewhat surprising that randomized cross validation search with few trial
 	\bibitem{sl.rcv} \url{https://scikit-learn.org/stable/modules/grid_search.html#randomized-parameter-search}
 \end{thebibliography}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
 
 \end{document}
